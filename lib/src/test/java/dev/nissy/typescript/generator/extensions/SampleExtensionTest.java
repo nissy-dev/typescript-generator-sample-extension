@@ -1,10 +1,14 @@
 package dev.nissy.typescript.generator.extensions;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -26,8 +30,9 @@ class SampleExtensionTest {
         final String output = new TypeScriptGenerator(settings).generateTypeScript(Input.from(SampleClass.class));
         System.out.println(output);
         assertTrue(output.contains("text0: string | null;"));
-        assertTrue(output.contains("text1: string | null;"));
-        // assertTrue(output.contains("fieldList: { [index: string]: string;"));
+        assertTrue(output.contains("text1: string;"));
+        assertTrue(output.contains("text2: string;"));
+        assertTrue(output.contains("fieldList: { [index: string]: FieldForm;"));
     }
 
     public static class SampleClass {
@@ -55,18 +60,16 @@ class SampleExtensionTest {
 
     }
 
-    // public static class FieldFormDeserializer extends StdDeserializer<FieldForm>
-    // {
-    // private static final long serialVersionUID = 1L;
+    public static class FieldFormDeserializer extends StdDeserializer<FieldForm> {
+        private static final long serialVersionUID = 1L;
 
-    // public SampleDeserializer() {
-    // super(FieldForm.class);
-    // }
+        public FieldFormDeserializer() {
+            super(FieldForm.class);
+        }
 
-    // @Override
-    // public List deserialize(final JsonParser p, final DeserializationContext
-    // ctxt) throws IOException {
-    // return Arrays.asList("hello", "world");
-    // }
-    // }
+        @Override
+        public List deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+            return Arrays.asList("hello", "world");
+        }
+    }
 }

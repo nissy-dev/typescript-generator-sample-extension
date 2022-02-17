@@ -2,6 +2,7 @@
 package dev.nissy.typescript.generator.extensions;
 
 import cz.habarta.typescript.generator.Settings;
+import cz.habarta.typescript.generator.TypeScriptFileType;
 import cz.habarta.typescript.generator.TypeScriptOutputKind;
 import cz.habarta.typescript.generator.JsonLibrary;
 import cz.habarta.typescript.generator.OptionalPropertiesDeclaration;
@@ -18,6 +19,7 @@ public class TestUtils {
     settings.newline = "\n";
     settings.requiredAnnotations.add(jakarta.validation.constraints.NotNull.class);
     settings.optionalPropertiesDeclaration = OptionalPropertiesDeclaration.nullableType;
+    settings.outputFileType = TypeScriptFileType.implementationFile;
     return settings;
   }
 }
