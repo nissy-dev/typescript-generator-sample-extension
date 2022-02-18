@@ -60,7 +60,8 @@ public class DefaultValueNonNullable extends Extension {
             }).collect(Collectors.toList());
             return tsBean.withProperties(properties);
         } catch (Exception e) {
-            TypeScriptGenerator.getLogger().verbose(String.format("SampleExtension raised error: ", e.getMessage()));
+            TypeScriptGenerator.getLogger()
+                    .verbose(String.format("DefaultValueNonNullable raised error: ", e.getMessage()));
             return tsBean;
         }
     }

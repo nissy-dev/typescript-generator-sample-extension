@@ -26,12 +26,13 @@ class ExtensionTest {
     public void test() {
         final Settings settings = TestUtils.settings();
         settings.extensions.add(new DefaultValueNonNullable());
+        settings.extensions.add(new JsonDeserializeDecorator());
         final String output = new TypeScriptGenerator(settings).generateTypeScript(Input.from(SampleClass.class));
         System.out.println(output);
         assertTrue(output.contains("text0: string | null;"));
         assertTrue(output.contains("text1: string;"));
         assertTrue(output.contains("text2: string;"));
-        assertTrue(output.contains("fieldList: { [index: string]: FieldForm;"));
+        assertTrue(output.contains("fieldList: { [index: string]: FieldForm };"));
     }
 
     public static class SampleClass {
