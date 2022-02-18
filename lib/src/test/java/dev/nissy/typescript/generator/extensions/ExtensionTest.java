@@ -1,7 +1,6 @@
 package dev.nissy.typescript.generator.extensions;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ class ExtensionTest {
         assertTrue(output.contains("text0: string | null;"));
         assertTrue(output.contains("text1: string;"));
         assertTrue(output.contains("text2: string;"));
-        // assertTrue(output.contains("fieldList: { [index: string]: FieldForm;"));
+        assertTrue(output.contains("fieldList: { [index: string]: FieldForm;"));
     }
 
     public static class SampleClass {
@@ -44,14 +43,14 @@ class ExtensionTest {
         public String text2;
 
         // Check Jackson decorators
-        @JsonDeserialize(using = StdDeserializer.class)
+        @JsonDeserialize(using = FieldFormDeserializer.class)
         public List<FieldForm> fieldList = new ArrayList<>();
 
     }
 
     @Getter
     @Setter
-    public class FieldForm {
+    public static class FieldForm {
 
         @NotNull
         public String field0;
@@ -60,18 +59,17 @@ class ExtensionTest {
 
     }
 
-    // public static class FieldFormDeserializer extends StdDeserializer<FieldForm>
-    // {
-    // private static final long serialVersionUID = 1L;
+    public static class FieldFormDeserializer extends StdDeserializer<FieldForm> {
+        private static final long serialVersionUID = 1L;
 
-    // public FieldFormDeserializer() {
-    // super(FieldForm.class);
-    // }
+        public FieldFormDeserializer() {
+            super(FieldForm.class);
+        }
 
-    // @Override
-    // public List deserialize(final JsonParser p, final DeserializationContext
-    // ctxt) throws IOException {
-    // return Arrays.asList("hello", "world");
-    // }
-    // }
+        @Override
+        public FieldForm deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
+            FieldForm fieldForm = new FieldForm();
+            return fieldForm;
+        }
+    }
 }
