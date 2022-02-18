@@ -17,7 +17,7 @@ import cz.habarta.typescript.generator.TypeScriptGenerator;
 
 import java.lang.reflect.Field;
 
-public class SampleExtension extends Extension {
+public class DefaultValueNonNullable extends Extension {
 
     @Override
     public EmitterExtensionFeatures getFeatures() {
