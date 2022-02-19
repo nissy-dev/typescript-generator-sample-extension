@@ -25,8 +25,8 @@ class ExtensionTest {
     @Test
     public void test() {
         final Settings settings = TestUtils.settings();
-        settings.extensions.add(new DefaultValueNonNullable());
-        settings.extensions.add(new JsonDeserializeDecorator());
+        settings.extensions.add(new DefaultValueNonNullableExtension());
+        settings.extensions.add(new StdDeserializerExtension());
         final String output = new TypeScriptGenerator(settings).generateTypeScript(Input.from(SampleClass.class));
         assertTrue(output.contains("text0: string | null;"));
         assertTrue(output.contains("text1: string;"));

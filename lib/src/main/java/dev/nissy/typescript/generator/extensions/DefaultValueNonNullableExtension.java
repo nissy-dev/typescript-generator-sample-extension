@@ -17,7 +17,7 @@ import cz.habarta.typescript.generator.TypeScriptGenerator;
 
 import java.lang.reflect.Field;
 
-public class DefaultValueNonNullable extends Extension {
+public class DefaultValueNonNullableExtension extends Extension {
 
     @Override
     public EmitterExtensionFeatures getFeatures() {
@@ -61,7 +61,7 @@ public class DefaultValueNonNullable extends Extension {
             return tsBean.withProperties(properties);
         } catch (Exception e) {
             TypeScriptGenerator.getLogger()
-                    .verbose(String.format("DefaultValueNonNullable raised error: ", e.getMessage()));
+                    .verbose(String.format("DefaultValueNonNullableExtension raised error: ", e.getMessage()));
             return tsBean;
         }
     }

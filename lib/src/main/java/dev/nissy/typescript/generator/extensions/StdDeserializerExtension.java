@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;
 
-public class JsonDeserializeDecorator extends Extension {
+public class StdDeserializerExtension extends Extension {
 
   @Override
   public EmitterExtensionFeatures getFeatures() {
@@ -65,7 +65,7 @@ public class JsonDeserializeDecorator extends Extension {
           bean.getComments());
     } catch (Exception e) {
       TypeScriptGenerator.getLogger()
-          .verbose(String.format("JsonDeserializeDecorator raised error: ", e.getMessage()));
+          .verbose(String.format("StdDeserializerExtension raised error: ", e.getMessage()));
       return bean;
     }
   }
