@@ -28,10 +28,10 @@ class ExtensionTest {
         settings.extensions.add(new DefaultValueNonNullable());
         settings.extensions.add(new JsonDeserializeDecorator());
         final String output = new TypeScriptGenerator(settings).generateTypeScript(Input.from(SampleClass.class));
-        System.out.println(output);
         assertTrue(output.contains("text0: string | null;"));
         assertTrue(output.contains("text1: string;"));
         assertTrue(output.contains("text2: string;"));
+        assertTrue(output.contains("text3: string;"));
         assertTrue(output.contains("fieldList: { [index: string]: FieldForm };"));
     }
 
@@ -42,10 +42,15 @@ class ExtensionTest {
         public String text1 = "hello";
         @NotNull
         public String text2;
+        private String text3 = "hello";
 
         // Check Jackson decorators
         @JsonDeserialize(using = FieldFormDeserializer.class)
-        public List<FieldForm> fieldList = new ArrayList<>();
+        private List<FieldForm> fieldList = new ArrayList<>();
+
+        public String getText3() {
+            return this.text3;
+        }
 
     }
 
@@ -54,9 +59,9 @@ class ExtensionTest {
     public static class FieldForm {
 
         @NotNull
-        public String field0;
+        private String field0;
         @NotNull
-        public Long field1;
+        private Long field1;
 
     }
 

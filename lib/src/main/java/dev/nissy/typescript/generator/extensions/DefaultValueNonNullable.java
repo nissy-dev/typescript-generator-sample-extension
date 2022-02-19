@@ -46,7 +46,7 @@ public class DefaultValueNonNullable extends Extension {
                 try {
                     final Class<?> originClass = bean.getOrigin();
                     final Object instance = originClass.getConstructor().newInstance();
-                    final Field field = originClass.getField(tsProperty.getName());
+                    final Field field = originClass.getDeclaredField(tsProperty.getName());
                     field.setAccessible(true);
                     if (field.get(instance) != null && tsProperty.tsType instanceof TsType.UnionType) {
                         final TsType.UnionType unionType = (TsType.UnionType) tsProperty.tsType;
