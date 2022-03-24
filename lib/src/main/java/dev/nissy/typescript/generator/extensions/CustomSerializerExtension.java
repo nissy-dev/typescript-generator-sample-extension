@@ -15,12 +15,12 @@ import cz.habarta.typescript.generator.emitter.EmitterExtensionFeatures;
 import cz.habarta.typescript.generator.parser.BeanModel;
 import cz.habarta.typescript.generator.TypeScriptGenerator;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.lang.reflect.Field;
 
-public class StdDeserializerExtensionRefactor extends Extension {
+public class CustomSerializerExtension extends Extension {
 
   @Override
   public EmitterExtensionFeatures getFeatures() {
@@ -50,10 +50,10 @@ public class StdDeserializerExtensionRefactor extends Extension {
           final Class<?> originClass = bean.getOrigin();
           final Field field = originClass.getDeclaredField(tsProperty.getName());
           field.setAccessible(true);
-          JsonDeserialize jsonDeserialize = field.getDeclaredAnnotation(JsonDeserialize.class);
+          JsonSerialize jsonDeserialize = field.getDeclaredAnnotation(JsonSerialize.class);
           if (jsonDeserialize != null
-              && (jsonDeserialize.using().getSuperclass() == StdDeserializer.class
-                  || jsonDeserialize.contentUsing().getSuperclass() == StdDeserializer.class)) {
+              && (jsonDeserialize.using().getSuperclass() == StdSerializer.class
+                  || jsonDeserialize.contentUsing().getSuperclass() == StdSerializer.class)) {
             final TsType newType = transformType(tsProperty.tsType);
             return tsProperty.withTsType(newType);
           }
@@ -66,7 +66,7 @@ public class StdDeserializerExtensionRefactor extends Extension {
       return tsBean.withProperties(properties);
     } catch (Exception e) {
       TypeScriptGenerator.getLogger()
-          .verbose(String.format("DefaultValueNonNullableExtension raised error: ", e.getMessage()));
+          .verbose(String.format("CustomSerializerExtension raised error: ", e.getMessage()));
       return tsBean;
     }
   }
@@ -75,13 +75,19 @@ public class StdDeserializerExtensionRefactor extends Extension {
     if (tsType instanceof TsType.UnionType) {
       final TsType.UnionType unionType = (TsType.UnionType) tsType;
       final List<TsType> newTypes = unionType.types.stream().map(
-          (TsType type) -> type instanceof TsType.BasicArrayType ? new TsType.IndexedArrayType(TsType.String,
-              ((TsType.BasicArrayType) type).elementType) : type)
-          .collect(Collectors.toList());
+          (TsType type) -> {
+            if (type instanceof TsType.BasicType && ((TsType.BasicType) type) == TsType.Number) {
+              return TsType.String;
+            }
+            return type;
+          }).collect(Collectors.toList());
       return new TsType.UnionType(newTypes);
-    } else if (tsType instanceof TsType.BasicArrayType) {
-      final TsType.BasicArrayType basicArrayType = (TsType.BasicArrayType) tsType;
-      return new TsType.IndexedArrayType(TsType.String, basicArrayType.elementType);
+    } else if (tsType instanceof TsType.BasicType) {
+      final TsType.BasicType basicType = (TsType.BasicType) tsType;
+      if (basicType == TsType.Number) {
+        return TsType.String;
+      }
+      return tsType;
     } else {
       return tsType;
     }
